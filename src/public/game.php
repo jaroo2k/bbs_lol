@@ -37,7 +37,7 @@ require dirname(__DIR__) . '/bootstrap.php';
         <fieldset class="champ-select" id="champ-select">
             <legend>챔피언 선택</legend>
             <div class="champ-list">
-<?php foreach (['dori' => ['티모', '날쌘 정찰병'], 'coco' => ['애니', '꼬마 마법사'], 'lumi' => ['럭스', '별빛 수호자'], 'momo' => ['유미', '장난꾸러기 냥이'], 'dandan' => ['말파이트', '든든한 돌 골렘']] as $key => [$name, $role]): ?>
+<?php foreach (['dori' => ['도리', '날쌘 정찰병'], 'coco' => ['코코', '꼬마 마법사'], 'lumi' => ['루미', '별빛 수호자'], 'momo' => ['모모', '장난꾸러기 냥이'], 'dandan' => ['단단', '든든한 돌 골렘']] as $key => [$name, $role]): ?>
                 <label class="champ">
                     <input type="radio" name="champ" value="<?= $key ?>">
                     <canvas data-champ="<?= $key ?>" width="72" height="72" aria-hidden="true"></canvas>

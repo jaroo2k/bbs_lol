@@ -14,11 +14,11 @@
     const TYPES = { coin: { r: 14, points: 10 }, cookie: { r: 18, points: 30 }, heart: { r: 16, points: 0 }, bomb: { r: 19, points: 0 } };
     const KEYMAP = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
     const CHAMPS = {
-        dori: { name: '티모', role: '날쌘 정찰병', perk: '날쌘 발: 이동 속도 +30%', speed: 1.3, draw: drawDori },
-        coco: { name: '애니', role: '꼬마 마법사', perk: '불꽃 정령: 폭탄을 1번 막아줌 (20초마다 충전)', shield: true, draw: drawCoco },
-        lumi: { name: '럭스', role: '별빛 수호자', perk: '별빛 결계: 간식 획득 범위 +35%', reach: 1.35, draw: drawLumi },
-        momo: { name: '유미', role: '장난꾸러기 냥이', perk: '냥냥 펀치: 근처 간식을 끌어당김', charm: true, draw: drawMomo },
-        dandan: { name: '말파이트', role: '든든한 돌 골렘', perk: '바위 피부: 목숨 4개로 시작', lives: 4, draw: drawDandan },
+        dori: { name: '도리', role: '날쌘 정찰병', perk: '날쌘 발: 이동 속도 +30%', speed: 1.3, draw: drawDori },
+        coco: { name: '코코', role: '꼬마 마법사', perk: '불꽃 정령: 폭탄을 1번 막아줌 (20초마다 충전)', shield: true, draw: drawCoco },
+        lumi: { name: '루미', role: '별빛 수호자', perk: '별빛 결계: 간식 획득 범위 +35%', reach: 1.35, draw: drawLumi },
+        momo: { name: '모모', role: '장난꾸러기 냥이', perk: '냥냥 펀치: 근처 간식을 끌어당김', charm: true, draw: drawMomo },
+        dandan: { name: '단단', role: '든든한 돌 골렘', perk: '바위 피부: 목숨 4개로 시작', lives: 4, draw: drawDandan },
     };
 
     let best = 0, champId = 'dori';
