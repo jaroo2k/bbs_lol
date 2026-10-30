@@ -2,6 +2,8 @@
 (() => {
     const W = 480, H = 640, MAX_LIVES = 5, BEST_KEY = 'rift-snack-best', CHAMP_KEY = 'rift-snack-champ';
     const SHIELD_COOLDOWN = 20;
+    const LANE_Y = H - 104, RIVER_Y = H * 0.42, RIVER_ANGLE = 0.35;
+    const SHRINES = [[78, 215], [400, 440]];
     const $ = id => document.getElementById(id);
     const canvas = $('game'), ctx = canvas.getContext('2d');
     const overlay = $('overlay'), overlayTitle = $('overlay-title'), overlayText = $('overlay-text');
@@ -504,49 +506,260 @@
         g.beginPath(); g.moveTo(-r * 0.5, -r * 0.47); g.lineTo(-r * 0.3, -r * 0.32); g.lineTo(-r * 0.36, -r * 0.2); g.stroke();
     }
 
+    // 매번 같은 배경이 나오도록 고정 시드 난수 사용
+    function rng(seed) {
+        return () => {
+            seed = (seed + 0x6d2b79f5) | 0;
+            let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+    }
+
+    // 강 중심선: 화면 중앙을 지나 -0.35rad 기울어진 직선
+    function riverY(x) { return RIVER_Y + (W / 2 - x) * Math.tan(RIVER_ANGLE); }
+
+    function wavyBand(g, half, amp, phase) {
+        g.beginPath();
+        for (let x = -W; x <= W; x += 8) g.lineTo(x, -half + Math.sin(x * 0.045 + phase) * amp);
+        for (let x = W; x >= -W; x -= 8) g.lineTo(x, half + Math.sin(x * 0.05 + phase + 2) * amp);
+        g.closePath();
+        g.fill();
+    }
+
+    function drawRock(g, x, y, w, h, rand) {
+        const pts = [];
+        for (let i = 0; i < 9; i++) {
+            const a = Math.PI + i / 8 * Math.PI;
+            pts.push([x + Math.cos(a) * w * (0.85 + rand() * 0.2), y + Math.sin(a) * h * (0.8 + rand() * 0.3)]);
+        }
+        g.fillStyle = '#00000026';
+        oval(g, x + 4, y + 4, w * 1.02, h * 0.25);
+        g.fillStyle = '#5c584f';
+        poly(g, [...pts, [x + w, y + h * 0.2], [x - w, y + h * 0.2]]);
+        g.fillStyle = '#7b766b';
+        poly(g, pts.map(([px, py]) => [x + (px - x) * 0.85, y + (py - y) * 0.85 - h * 0.08]));
+        g.fillStyle = '#958f82';
+        poly(g, pts.slice(2, 7).map(([px, py]) => [x + (px - x) * 0.55, y + (py - y) * 0.75 - h * 0.12]));
+        g.fillStyle = '#4f8a4acc';
+        oval(g, x - w * 0.15, y - h * 0.78, w * 0.4, h * 0.14);
+    }
+
+    function drawTree(g, x, y, s) {
+        g.fillStyle = '#0000002e';
+        oval(g, x + s * 0.2, y + s * 0.75, s * 1.1, s * 0.35);
+        g.fillStyle = '#5a3d27';
+        g.fillRect(x - s * 0.12, y + s * 0.2, s * 0.24, s * 0.55);
+        for (const [dx, dy, r, c] of [[0, 0, 1, '#2a5e38'], [-0.55, 0.15, 0.7, '#2a5e38'], [0.55, 0.1, 0.72, '#2a5e38'], [-0.15, -0.25, 0.6, '#367a46'], [0.3, -0.1, 0.45, '#438c50'], [-0.4, -0.05, 0.35, '#438c50']]) {
+            g.fillStyle = c;
+            circle(g, x + dx * s, y + dy * s, r * s);
+        }
+    }
+
+    function drawBrush(g, x, y, w, rand) {
+        g.fillStyle = '#00000022';
+        oval(g, x, y + 4, w * 0.6, w * 0.16);
+        g.lineCap = 'round';
+        for (let i = 0; i < w * 0.9; i++) {
+            const bx = x + (rand() - 0.5) * w, h = w * (0.35 + rand() * 0.4), lean = (rand() - 0.5) * w * 0.4;
+            g.strokeStyle = rand() < 0.5 ? '#2c6b3e' : '#347a46';
+            g.lineWidth = 2 + rand() * 2;
+            g.beginPath();
+            g.moveTo(bx, y);
+            g.quadraticCurveTo(bx + lean * 0.3, y - h * 0.6, bx + lean, y - h);
+            g.stroke();
+            if (rand() < 0.4) {
+                g.fillStyle = '#7fc27a';
+                circle(g, bx + lean, y - h, 1.5);
+            }
+        }
+    }
+
+    function drawShrine(g, x, y) {
+        g.fillStyle = '#00000030';
+        oval(g, x + 4, y + 6, 30, 9);
+        g.fillStyle = '#6d6a74';
+        g.fillRect(x - 24, y - 8, 48, 14);
+        g.fillStyle = '#85828d';
+        g.fillRect(x - 17, y - 52, 34, 46);
+        g.strokeStyle = '#6d6a74';
+        g.lineWidth = 1.5;
+        for (const by of [-40, -28, -16]) {
+            g.beginPath();
+            g.moveTo(x - 17, y + by);
+            g.lineTo(x + 17, y + by);
+            g.stroke();
+        }
+        g.fillStyle = '#9c99a6';
+        g.fillRect(x - 21, y - 58, 42, 8);
+        g.fillStyle = '#4f8a4a';
+        oval(g, x - 10, y - 57, 12, 3);
+        g.fillStyle = '#3fb7d6';
+        poly(g, [[x, y - 92], [x + 11, y - 72], [x, y - 60], [x - 11, y - 72]]);
+        g.fillStyle = '#a8ecfa';
+        poly(g, [[x, y - 92], [x + 4, y - 74], [x, y - 62], [x - 5, y - 72]]);
+    }
+
     function drawBackground(g) {
+        const rand = rng(20261030);
         const grass = g.createLinearGradient(0, 0, 0, H);
-        grass.addColorStop(0, '#78c47a');
-        grass.addColorStop(1, '#3f8f55');
+        grass.addColorStop(0, '#6cb86f');
+        grass.addColorStop(1, '#3d8a52');
         g.fillStyle = grass;
         g.fillRect(0, 0, W, H);
-
-        g.fillStyle = '#5aa964';
-        for (let i = 0; i < 70; i++) {
-            const x = (i * 97) % W, y = (i * 53 + (i % 7) * 31) % (H - 120);
-            g.fillRect(x, y, 2, 7);
-            g.fillRect(x + 4, y + 2, 2, 5);
+        for (let i = 0; i < 45; i++) {
+            g.fillStyle = rand() < 0.5 ? '#ffffff0c' : '#0000000e';
+            oval(g, rand() * W, rand() * LANE_Y, 30 + rand() * 60, 14 + rand() * 26, rand() * Math.PI);
+        }
+        for (let i = 0; i < 140; i++) {
+            const x = rand() * W, y = rand() * LANE_Y;
+            g.fillStyle = rand() < 0.5 ? '#5aa964' : '#86c985';
+            g.fillRect(x, y, 2, 5 + rand() * 4);
+            g.fillRect(x + 3, y + 2, 2, 4);
         }
 
+        // 강과 강둑
         g.save();
-        g.translate(W / 2, H * 0.42);
-        g.rotate(-0.35);
-        const river = g.createLinearGradient(0, -48, 0, 48);
-        river.addColorStop(0, '#8fdcf3');
-        river.addColorStop(1, '#4aa8d8');
-        g.fillStyle = river;
-        g.fillRect(-W, -46, W * 2, 92);
-        g.fillStyle = '#ffffff66';
-        for (let i = 0; i < 14; i++) g.fillRect(-W + i * 80, -14 + (i % 3) * 14, 30, 4);
+        g.translate(W / 2, RIVER_Y);
+        g.rotate(-RIVER_ANGLE);
+        g.fillStyle = '#b7a57a';
+        wavyBand(g, 60, 5, 0);
+        g.fillStyle = '#a08f66';
+        wavyBand(g, 54, 4, 1);
+        const water = g.createLinearGradient(0, -48, 0, 48);
+        water.addColorStop(0, '#8ad8ef');
+        water.addColorStop(0.5, '#4fa9d6');
+        water.addColorStop(1, '#3a8fc4');
+        g.fillStyle = water;
+        wavyBand(g, 47, 4, 1.5);
+        g.fillStyle = '#2f7fb526';
+        wavyBand(g, 18, 3, 3);
+        g.strokeStyle = '#ffffff55';
+        g.lineWidth = 2;
+        g.lineCap = 'round';
+        for (let i = 0; i < 18; i++) {
+            const x = -W + rand() * W * 2, y = (rand() - 0.5) * 70;
+            g.beginPath();
+            g.arc(x, y, 8 + rand() * 8, Math.PI * 1.15, Math.PI * 1.85);
+            g.stroke();
+        }
+        for (const [x, y, s] of [[-170, 30, 9], [-150, 36, 6], [60, -32, 8], [190, 22, 10]]) {
+            g.fillStyle = '#ffffff40';
+            oval(g, x, y + s * 0.4, s * 1.5, s * 0.5);
+            g.fillStyle = '#6f7a80';
+            oval(g, x, y, s, s * 0.7);
+            g.fillStyle = '#93a0a6';
+            oval(g, x - s * 0.25, y - s * 0.25, s * 0.5, s * 0.3);
+        }
+        for (const [x, y] of [[-60, 14], [-40, 28], [120, -10], [240, -26]]) {
+            g.fillStyle = '#4c9a52';
+            g.beginPath();
+            g.arc(x, y, 9, 0.5, Math.PI * 2);
+            g.lineTo(x, y);
+            g.fill();
+            g.fillStyle = '#6dbb6a';
+            circle(g, x - 2, y - 2, 3);
+        }
+        g.fillStyle = '#ffb3d1';
+        circle(g, -40, 26, 3);
+        circle(g, 240, -28, 3);
         g.restore();
 
-        g.fillStyle = '#d6c08b';
-        g.fillRect(0, H - 104, W, 104);
-        g.fillStyle = '#c4ad76';
-        for (let x = 12; x < W; x += 46) circle(g, x, H - 70 + (x % 3) * 14, 5);
+        // 정글 벽: 나무와 절벽 바위
+        drawTree(g, 30, 30, 34);
+        drawTree(g, 95, 10, 28);
+        drawTree(g, 455, 270, 30);
+        drawTree(g, 20, 470, 32);
+        drawTree(g, 440, 20, 26);
+        drawRock(g, 395, 60, 50, 34, rand);
+        drawRock(g, 330, 40, 30, 22, rand);
+        drawRock(g, 70, 545, 46, 30, rand);
+        drawRock(g, 250, 470, 26, 18, rand);
 
-        const bush = (x, y, s) => {
-            g.fillStyle = '#2f7a45';
-            circle(g, x, y, s);
-            circle(g, x - s * 0.8, y + s * 0.25, s * 0.75);
-            circle(g, x + s * 0.8, y + s * 0.25, s * 0.75);
-            g.fillStyle = '#3f9a5a';
-            circle(g, x - s * 0.25, y - s * 0.25, s * 0.45);
-        };
-        bush(60, 110, 26);
-        bush(415, 180, 22);
-        bush(80, 430, 20);
-        bush(405, 470, 26);
+        drawBrush(g, 210, 140, 60, rand);
+        drawBrush(g, 330, 470, 64, rand);
+        drawBrush(g, 130, 410, 48, rand);
+
+        for (const [x, y] of SHRINES) drawShrine(g, x, y);
+
+        for (let i = 0; i < 26; i++) {
+            const x = rand() * W, y = rand() * LANE_Y;
+            if (Math.abs(y - riverY(x)) < 70) continue;
+            if (rand() < 0.6) {
+                const c = ['#fff3a8', '#ffc2dc', '#c9b8ff', '#ffffff'][Math.floor(rand() * 4)];
+                g.fillStyle = c;
+                for (let p = 0; p < 5; p++) circle(g, x + Math.cos(p * 1.257) * 2.6, y + Math.sin(p * 1.257) * 2.6, 2);
+                g.fillStyle = '#f2b632';
+                circle(g, x, y, 1.6);
+            } else {
+                g.fillStyle = '#8a8478';
+                oval(g, x, y, 4 + rand() * 3, 3);
+                g.fillStyle = '#a9a396';
+                oval(g, x - 1, y - 1, 2, 1.4);
+            }
+        }
+
+        // 돌길 레인
+        g.fillStyle = '#7f7258';
+        g.fillRect(0, LANE_Y, W, H - LANE_Y);
+        for (let row = 0, y = LANE_Y + 4; y < H; row++, y += 20) {
+            for (let x = -(row % 2) * 18 - rand() * 10; x < W; ) {
+                const w = 26 + rand() * 18;
+                g.fillStyle = ['#b6a887', '#c3b593', '#aa9c7d', '#bdb08d'][Math.floor(rand() * 4)];
+                g.beginPath();
+                g.roundRect(x + 2, y, w - 4, 16, 5);
+                g.fill();
+                g.fillStyle = '#ffffff1c';
+                g.fillRect(x + 5, y + 2, w - 12, 3);
+                x += w;
+            }
+        }
+        g.fillStyle = '#6b8f4a';
+        g.fillRect(0, LANE_Y - 3, W, 6);
+        g.lineCap = 'round';
+        for (let x = 0; x < W; x += 5) {
+            g.strokeStyle = rand() < 0.5 ? '#4f9a58' : '#5fae63';
+            g.lineWidth = 2;
+            g.beginPath();
+            g.moveTo(x, LANE_Y);
+            g.lineTo(x + (rand() - 0.5) * 4, LANE_Y + 3 + rand() * 7);
+            g.stroke();
+        }
+
+        const vignette = g.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.75);
+        vignette.addColorStop(0, '#00000000');
+        vignette.addColorStop(1, '#00000047');
+        g.fillStyle = vignette;
+        g.fillRect(0, 0, W, H);
+    }
+
+    // 석탑 수정 빛, 물결 반짝임, 반딧불
+    function drawAmbient(t) {
+        for (const [x, y] of SHRINES) {
+            const pulse = 0.55 + 0.45 * Math.sin(t * 0.003 + x);
+            const glow = ctx.createRadialGradient(x, y - 76, 2, x, y - 76, 34);
+            glow.addColorStop(0, `rgba(140, 235, 255, ${0.55 * pulse})`);
+            glow.addColorStop(1, 'rgba(140, 235, 255, 0)');
+            ctx.fillStyle = glow;
+            circle(ctx, x, y - 76, 34);
+        }
+        ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 7; i++) {
+            const x = ((t * 0.025 + i * 83) % (W + 60)) - 30;
+            const y = riverY(x) + Math.sin(i * 2.3) * 26;
+            ctx.globalAlpha = 0.5 * Math.max(0, Math.sin(t * 0.004 + i * 1.7));
+            oval(ctx, x, y, 6, 1.5, -RIVER_ANGLE);
+        }
+        for (let i = 0; i < 12; i++) {
+            const x = (i * 131 + Math.sin(t * 0.0006 + i) * 40 + W) % W;
+            const y = (i * 71) % (LANE_Y - 40) + 20 + Math.cos(t * 0.0008 + i * 2) * 20;
+            ctx.globalAlpha = 0.35 + 0.5 * Math.max(0, Math.sin(t * 0.003 + i * 1.3));
+            ctx.fillStyle = '#e8ff9a55';
+            circle(ctx, x, y, 5);
+            ctx.fillStyle = '#f4ffc2';
+            circle(ctx, x, y, 1.8);
+        }
+        ctx.globalAlpha = 1;
     }
 
     function drawPlayer(t) {
@@ -662,6 +875,7 @@
             ctx.translate((Math.random() - 0.5) * k, (Math.random() - 0.5) * k);
         }
         ctx.drawImage(bg, 0, 0, W, H);
+        drawAmbient(t);
         for (const it of items) drawItem(it, t);
         drawPlayer(t);
         for (const p of particles) {
