@@ -1,0 +1,64 @@
+.game-layout { display: grid; grid-template-columns: minmax(0, 520px) 1fr; gap: 24px; align-items: start; }
+.game-card { padding: 18px; }
+.game-hud { display: flex; align-items: center; gap: 22px; padding: 2px 4px 16px; }
+.game-hud div { display: flex; flex-direction: column; min-width: 0; }
+.game-hud span { font-size: 11px; color: var(--muted); font-weight: 700; }
+.game-hud strong { font-size: 22px; letter-spacing: -.5px; line-height: 1.2; }
+.game-hud .button { margin-left: auto; min-height: 38px; padding: 7px 14px; }
+.game-hud .button:disabled { opacity: .45; cursor: default; }
+.hud-lives { color: #ff5d93; letter-spacing: 1px; }
+
+.game-stage { position: relative; border-radius: 14px; overflow: hidden; background: #3f8f55; aspect-ratio: 3 / 4; }
+.game-stage canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: pointer; outline: none; }
+.game-overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: #0f2a1f99; backdrop-filter: blur(2px); }
+.game-overlay[hidden] { display: none; }
+.overlay-box { text-align: center; color: #fff; background: #0f2a1fcc; border: 1px solid #ffffff2e; border-radius: 18px; padding: 28px 30px; max-width: 320px; }
+.overlay-box h2 { font-size: 26px; letter-spacing: -1px; margin: 0 0 8px; }
+.overlay-box p { margin: 0 0 22px; color: #d3e6dc; font-size: 14px; }
+.game-start { min-height: 50px; padding: 12px 30px; font-size: 16px; background: #9be3bb; color: #0f2a1f; border-radius: 12px; }
+.game-start:hover { background: #b5ecce; }
+
+.game-side { display: grid; gap: 16px; }
+.side-box { padding: 22px 24px; }
+.side-box h3 { margin: 0 0 10px; font-size: 16px; letter-spacing: -.4px; }
+.side-box ul { margin: 0; padding-left: 18px; font-size: 13px; color: #5d6b63; }
+.side-box li + li { margin-top: 6px; }
+.side-box p { margin: 0; font-size: 13px; color: #5d6b63; }
+.side-box b { color: var(--green); }
+.item-list { list-style: none; padding: 0 !important; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.item-list li { margin: 0 !important; background: #f5f7f5; border-radius: 8px; padding: 8px 10px; }
+.item-list .bad { color: #c0453b; }
+kbd { display: inline-block; min-width: 22px; text-align: center; font: 700 11px/1.6 inherit; background: #fff; border: 1px solid #dbe3dd; border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; color: #26332f; }
+.game-note { color: var(--muted); font-size: 11px; margin: 28px 0 48px; }
+
+@media (max-width: 860px) {
+    .game-layout { grid-template-columns: 1fr; }
+    .game-card { max-width: 520px; width: 100%; margin: 0 auto; }
+}
+@media (max-width: 640px) {
+    .game-card { padding: 12px; }
+    .game-hud { gap: 16px; }
+    .game-hud strong { font-size: 18px; }
+    .nav-links { gap: 10px; }
+}
+
+.champ-select { border: 0; margin: 0 0 20px; padding: 0; min-width: 0; }
+.champ-select legend { font-size: 15px; font-weight: 800; padding: 0; margin-bottom: 10px; }
+.champ-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.champ { position: relative; margin: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px 12px; background: #fff; border: 2px solid var(--line); border-radius: 14px; cursor: pointer; text-align: center; transition: border-color .15s, transform .15s, box-shadow .15s; }
+.champ:hover { transform: translateY(-2px); box-shadow: 0 8px 20px #22382c14; }
+.champ input { position: absolute; opacity: 0; pointer-events: none; }
+.champ canvas { width: 72px; height: 72px; }
+.champ strong { font-size: 15px; }
+.champ span { font-size: 11px; color: var(--muted); font-weight: 400; }
+.champ:has(input:checked) { border-color: var(--green); background: #f0f8f2; box-shadow: 0 0 0 3px #236d511f; }
+.champ:has(input:focus-visible) { outline: 3px solid #82b99e; outline-offset: 2px; }
+.champ-select:disabled .champ { cursor: not-allowed; opacity: .55; transform: none; box-shadow: none; }
+.champ-select:disabled .champ:has(input:checked) { opacity: 1; }
+.champ-perk { margin: 10px 0 0; font-size: 13px; color: #5d6b63; }
+.champ-perk b { color: var(--green); }
+@media (max-width: 640px) {
+    .champ-list { grid-template-columns: repeat(5, minmax(64px, 1fr)); overflow-x: auto; padding-bottom: 4px; }
+    .champ canvas { width: 56px; height: 56px; }
+    .champ span { display: none; }
+}

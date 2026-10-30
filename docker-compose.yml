@@ -1,0 +1,55 @@
+services:
+  php:
+    build:
+      context: ./docker/php
+      args:
+        PHP_VERSION: 8.5.12
+    container_name: mp-php
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: ${DB_DATABASE:-mp}
+      DB_USERNAME: ${DB_USERNAME:-mp}
+      DB_PASSWORD: ${DB_PASSWORD:-mp}
+      TZ: Asia/Seoul
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: mp-nginx
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8080}:80"
+    volumes:
+      - ./src:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+
+  mysql:
+    image: mysql:8.4
+    container_name: mp-mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+09:00
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-mp}
+      MYSQL_USER: ${DB_USERNAME:-mp}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-mp}
+      TZ: Asia/Seoul
+    ports:
+      - "127.0.0.1:${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  mysql_data:

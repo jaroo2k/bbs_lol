@@ -1,0 +1,84 @@
+.event-page { --mint: #9be3bb; --ink: #0f2a1f; background: #f5f7f5; }
+
+.ev-hero { background: radial-gradient(circle at 85% 20%, #2f8f66 0, transparent 45%), radial-gradient(circle at 10% 90%, #1d5c43 0, transparent 50%), var(--ink); color: #fff; padding: 72px 0 80px; overflow: hidden; }
+.ev-hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+.ev-badge { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px; padding: 7px 14px; border: 1px solid #ffffff33; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--mint); }
+.ev-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 #9be3bb99; animation: ev-pulse 1.8s infinite; }
+@keyframes ev-pulse { 70% { box-shadow: 0 0 0 10px #9be3bb00; } 100% { box-shadow: 0 0 0 0 #9be3bb00; } }
+.ev-hero h1 { font-size: 52px; line-height: 1.22; letter-spacing: -2.4px; margin: 0 0 22px; }
+.ev-hero h1 em { font-style: normal; color: var(--mint); }
+.ev-lead { margin: 0 0 32px; color: #d3e6dc; font-size: 16px; line-height: 1.8; }
+.ev-lead strong { color: #fff; }
+.ev-cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.ev-cta { display: inline-flex; justify-content: center; align-items: center; min-height: 54px; padding: 14px 28px; border: 0; border-radius: 12px; background: var(--mint); color: var(--ink); font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px #9be3bb40; transition: transform .15s, box-shadow .15s; }
+.ev-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 36px #9be3bb59; }
+.ev-cta-note { font-size: 13px; color: #a9c4b6; }
+
+.ev-counter { background: #ffffff0f; border: 1px solid #ffffff26; border-radius: 22px; padding: 30px; backdrop-filter: blur(6px); }
+.ev-counter-label { margin: 0; font-size: 13px; color: #a9c4b6; font-weight: 700; }
+.ev-counter-num { margin: 6px 0 18px; font-size: 56px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+.ev-counter-num small { font-size: 18px; color: #a9c4b6; letter-spacing: 0; font-weight: 600; }
+.ev-counter progress { width: 100%; height: 12px; border: 0; border-radius: 999px; overflow: hidden; background: #ffffff1f; appearance: none; }
+.ev-counter progress::-webkit-progress-bar { background: #ffffff1f; }
+.ev-counter progress::-webkit-progress-value { background: linear-gradient(90deg, #5fcf95, var(--mint)); border-radius: 999px; }
+.ev-counter progress::-moz-progress-bar { background: linear-gradient(90deg, #5fcf95, var(--mint)); border-radius: 999px; }
+.ev-counter-foot { margin: 14px 0 0; font-size: 13px; color: #d3e6dc; }
+.ev-counter-foot strong { color: var(--mint); }
+
+.ev-section { padding: 72px 0 0; }
+.ev-title { font-size: 30px; letter-spacing: -1.2px; margin: 0 0 30px; }
+.ev-perks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.ev-perk { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 28px; display: flex; flex-direction: column; transition: transform .15s, box-shadow .15s; }
+.ev-perk:hover { transform: translateY(-4px); box-shadow: 0 14px 34px #22382c14; }
+.ev-perk-icon { font-size: 34px; margin-bottom: 14px; }
+.ev-perk h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.5px; }
+.ev-perk p { margin: 0 0 18px; color: #5d6b63; font-size: 14px; flex: 1; }
+.ev-tag { align-self: flex-start; font-size: 12px; font-weight: 700; color: var(--green); background: #e7f2e9; border-radius: 6px; padding: 3px 10px; }
+
+.ev-steps ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
+.ev-steps li { counter-increment: step; display: flex; flex-direction: column; gap: 4px; padding: 24px 0 0; border-top: 3px solid var(--green); }
+.ev-steps li::before { content: "STEP " counter(step); font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--green); margin-bottom: 6px; }
+.ev-steps strong { font-size: 18px; }
+.ev-steps span { color: var(--muted); font-size: 14px; }
+
+.ev-join { margin-top: 72px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; padding: 44px; scroll-margin-top: 24px; }
+.ev-join-copy h2 { font-size: 30px; line-height: 1.35; letter-spacing: -1.2px; margin: 0 0 14px; }
+.ev-join-copy p:last-child { color: #5d6b63; margin: 0; }
+.ev-join-copy strong { color: var(--green); }
+.ev-form label:not(.ev-check) { margin-top: 0; }
+.ev-form input:not([type="checkbox"]) { margin-bottom: 18px; }
+.ev-check { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; font-weight: 400; color: #5d6b63; margin: 4px 0 22px; cursor: pointer; }
+.ev-check input { width: 18px; height: 18px; flex: none; margin: 2px 0 0; accent-color: var(--green); }
+.ev-submit { width: 100%; background: var(--green); color: #fff; box-shadow: 0 10px 26px #236d5133; }
+.ev-submit:hover { box-shadow: 0 14px 32px #236d5147; }
+.ev-done { grid-column: 1 / -1; text-align: center; padding: 10px 0; }
+.ev-done-icon { font-size: 48px; display: block; margin-bottom: 10px; }
+.ev-done h2 { font-size: 28px; }
+.ev-done p { color: #5d6b63; margin: 8px 0 24px; }
+.ev-done strong { color: var(--green); }
+
+.ev-faq { padding-bottom: 56px; }
+.ev-faq details { background: #fff; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+.ev-faq summary { padding: 18px 22px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; }
+.ev-faq summary::-webkit-details-marker { display: none; }
+.ev-faq summary::after { content: "+"; color: var(--green); font-size: 20px; line-height: 1; }
+.ev-faq details[open] summary::after { content: "−"; }
+.ev-faq details p { margin: 0; padding: 0 22px 18px; color: #5d6b63; font-size: 14px; }
+
+@media (prefers-reduced-motion: reduce) { .ev-pulse { animation: none; } .ev-cta, .ev-perk { transition: none; } }
+@media (max-width: 860px) {
+    .ev-hero-grid, .ev-join { grid-template-columns: 1fr; }
+    .ev-perks, .ev-steps ol { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+    .ev-hero { padding: 48px 0 56px; }
+    .ev-hero h1 { font-size: 36px; letter-spacing: -1.6px; }
+    .ev-lead { font-size: 14px; }
+    .ev-lead br { display: none; }
+    .ev-cta { width: 100%; }
+    .ev-counter { padding: 24px; }
+    .ev-counter-num { font-size: 44px; }
+    .ev-section { padding-top: 52px; }
+    .ev-title, .ev-join-copy h2 { font-size: 24px; }
+    .ev-join { margin-top: 52px; padding: 26px 20px; gap: 20px; }
+}
