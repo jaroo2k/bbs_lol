@@ -12,11 +12,11 @@
     const TYPES = { coin: { r: 14, points: 10 }, cookie: { r: 18, points: 30 }, heart: { r: 16, points: 0 }, bomb: { r: 19, points: 0 } };
     const KEYMAP = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
     const CHAMPS = {
-        dori: { name: '도리', role: '날쌘 정찰병', perk: '날쌘 발: 이동 속도 +30%', speed: 1.3, draw: drawDori },
-        coco: { name: '코코', role: '꼬마 마법사', perk: '불꽃 정령: 폭탄을 1번 막아줌 (20초마다 충전)', shield: true, draw: drawCoco },
-        lumi: { name: '루미', role: '별빛 수호자', perk: '별빛 결계: 간식 획득 범위 +35%', reach: 1.35, draw: drawLumi },
-        momo: { name: '모모', role: '장난꾸러기 냥이', perk: '냥냥 펀치: 근처 간식을 끌어당김', charm: true, draw: drawMomo },
-        dandan: { name: '단단', role: '든든한 돌 골렘', perk: '바위 피부: 목숨 4개로 시작', lives: 4, draw: drawDandan },
+        dori: { name: '티모', role: '날쌘 정찰병', perk: '날쌘 발: 이동 속도 +30%', speed: 1.3, draw: drawDori },
+        coco: { name: '애니', role: '꼬마 마법사', perk: '불꽃 정령: 폭탄을 1번 막아줌 (20초마다 충전)', shield: true, draw: drawCoco },
+        lumi: { name: '럭스', role: '별빛 수호자', perk: '별빛 결계: 간식 획득 범위 +35%', reach: 1.35, draw: drawLumi },
+        momo: { name: '유미', role: '장난꾸러기 냥이', perk: '냥냥 펀치: 근처 간식을 끌어당김', charm: true, draw: drawMomo },
+        dandan: { name: '말파이트', role: '든든한 돌 골렘', perk: '바위 피부: 목숨 4개로 시작', lives: 4, draw: drawDandan },
     };
 
     let best = 0, champId = 'dori';
@@ -345,33 +345,44 @@
         face(g, r, o, { eyeY: -r * 0.04, mouthY: r * 0.32 });
         g.fillStyle = '#4a2c18';
         oval(g, o.look, r * 0.2, r * 0.07, r * 0.05);
-        // 도토리 모자
-        g.fillStyle = '#7a4a22';
+        // 티모의 녹색 정찰 모자와 붉은 렌즈 고글.
+        g.fillStyle = '#567943';
         g.beginPath();
-        g.ellipse(0, -r * 0.6, r * 0.5, r * 0.3, 0, Math.PI, 0);
+        g.ellipse(0, -r * 0.55, r * 0.82, r * 0.48, 0, Math.PI, 0);
         g.fill();
-        g.fillStyle = '#a8743e';
-        for (const [dx, dy] of [[-0.25, -0.68], [0, -0.75], [0.25, -0.68], [-0.12, -0.8], [0.12, -0.8]]) circle(g, dx * r, dy * r, r * 0.045);
-        g.fillStyle = '#5a3418';
-        g.fillRect(-r * 0.04, -r * 1.02, r * 0.08, r * 0.14);
+        g.fillStyle = '#375234';
+        oval(g, 0, -r * 0.55, r * 0.92, r * 0.13);
+        g.fillStyle = '#533b27';
+        g.fillRect(-r * 0.66, -r * 0.87, r * 1.32, r * 0.19);
+        for (const k of [-1, 1]) {
+            outlined(g, k * r * 0.31, -r * 0.77, r * 0.22, '#c64d35', '#d6ae64');
+            g.fillStyle = '#ffb488';
+            oval(g, k * r * 0.31 - r * 0.05, -r * 0.82, r * 0.07, r * 0.04);
+        }
+        g.fillStyle = '#d84c3c';
+        poly(g, [[r * 0.55, -r * 0.95], [r * 0.72, -r * 1.3], [r * 0.9, -r * 1.12], [r * 0.68, -r * 0.86]]);
+        g.fillStyle = '#b34232';
+        poly(g, [[-r * 0.45, r * 0.7], [r * 0.45, r * 0.7], [0, r * 1.0]]);
     }
 
     function drawCoco(g, r, o) {
-        g.fillStyle = '#e06a98';
+        g.fillStyle = '#8d2435';
         circle(g, 0, -r * 0.02, r * 0.95);
-        g.fillStyle = '#ff8ab5';
+        g.fillStyle = '#d45043';
         circle(g, 0, -r * 0.02, r * 0.92);
         outlined(g, 0, r * 0.05, r * 0.78, '#ffe4cf', '#e8bfa2');
-        bangs(g, r * 0.9, '#ff8ab5', 0.14);
+        bangs(g, r * 0.9, '#d45043', 0.14);
         face(g, r, o, { eyeY: r * 0.1, mouthY: r * 0.42, eye: '#8a4fd6' });
-        // 마법사 모자
-        g.fillStyle = '#5b37a8';
-        oval(g, 0, -r * 0.62, r * 0.95, r * 0.16);
-        g.fillStyle = '#7a4fd1';
-        poly(g, [[-r * 0.55, -r * 0.64], [r * 0.15, -r * 1.55], [r * 0.55, -r * 0.64]]);
-        g.fillStyle = '#ffd34d';
-        star(g, -r * 0.02, -r * 0.92, r * 0.13);
-        // 불꽃 정령 (충전 중엔 회색)
+        // 애니의 보라색 고양이 귀 머리띠와 티버 인형.
+        g.strokeStyle = '#674078';
+        g.lineWidth = r * 0.16;
+        g.beginPath(); g.arc(0, 0, r * 0.9, Math.PI * 1.1, Math.PI * 1.9); g.stroke();
+        for (const k of [-1, 1]) {
+            g.fillStyle = '#674078';
+            poly(g, [[k * r * 0.35, -r * 0.8], [k * r * 0.65, -r * 1.2], [k * r * 0.87, -r * 0.55]]);
+            g.fillStyle = '#ec97af';
+            poly(g, [[k * r * 0.49, -r * 0.83], [k * r * 0.64, -r * 1.02], [k * r * 0.73, -r * 0.7]]);
+        }
         const sx = -o.face * r * 1.0, sy = r * 0.45 + Math.sin((o.t || 0) * 0.006) * r * 0.06;
         g.fillStyle = o.shield ? '#ff7a3d' : '#9a9a9a';
         g.beginPath();
@@ -385,22 +396,33 @@
         g.fillStyle = '#2a2233';
         circle(g, sx - r * 0.05, sy + r * 0.04, r * 0.03);
         circle(g, sx + r * 0.05, sy + r * 0.04, r * 0.03);
+        for (const k of [-1, 1]) outlined(g, sx + k * r * 0.19, sy - r * 0.17, r * 0.1, '#a56336', '#653c26');
+        outlined(g, sx, sy, r * 0.23, o.shield ? '#a56336' : '#858080', '#653c26');
+        g.fillStyle = '#e1b585';
+        oval(g, sx, sy + r * 0.08, r * 0.12, r * 0.09);
+        g.fillStyle = '#241c22';
+        circle(g, sx - r * 0.08, sy - r * 0.03, r * 0.035);
+        circle(g, sx + r * 0.08, sy - r * 0.03, r * 0.035);
+        circle(g, sx, sy + r * 0.05, r * 0.035);
     }
 
     function drawLumi(g, r, o) {
-        g.fillStyle = '#a99fd6';
+        g.fillStyle = '#bc8a35';
         circle(g, 0, -r * 0.05, r * 0.98);
-        g.fillStyle = '#e4ddfb';
+        g.fillStyle = '#f5d477';
         circle(g, 0, -r * 0.05, r * 0.95);
         for (const k of [-1, 1]) oval(g, k * r * 0.8, r * 0.4, r * 0.2, r * 0.45, k * -0.12);
         outlined(g, 0, r * 0.04, r * 0.78, '#ffe8d8', '#e7c4ac');
-        bangs(g, r * 0.95, '#e4ddfb', 0.15);
-        // 초승달 핀
-        g.fillStyle = '#ffd34d';
-        circle(g, r * 0.62, -r * 0.55, r * 0.17);
-        g.fillStyle = '#e4ddfb';
-        circle(g, r * 0.7, -r * 0.6, r * 0.14);
-        face(g, r, o, { eyeY: r * 0.08, mouthY: r * 0.4, eye: '#7a5cd6' });
+        bangs(g, r * 0.95, '#f5d477', 0.15);
+        // 럭스의 데마시아 왕관과 푸른 보석, 빛의 지팡이.
+        g.fillStyle = '#d9e6ee';
+        poly(g, [[-r * 0.75, -r * 0.65], [-r * 0.58, -r * 0.92], [-r * 0.27, -r * 0.73], [0, -r * 1.05], [r * 0.27, -r * 0.73], [r * 0.58, -r * 0.92], [r * 0.75, -r * 0.65], [0, -r * 0.48]]);
+        g.fillStyle = '#4b9edb';
+        poly(g, [[0, -r * 0.88], [r * 0.12, -r * 0.72], [0, -r * 0.55], [-r * 0.12, -r * 0.72]]);
+        g.strokeStyle = '#cfb16a'; g.lineWidth = r * 0.09;
+        g.beginPath(); g.moveTo(r * 0.95, r * 0.75); g.lineTo(r * 0.95, -r * 0.4); g.stroke();
+        g.fillStyle = '#fff4b5'; star(g, r * 0.95, -r * 0.4, r * 0.24);
+        face(g, r, o, { eyeY: r * 0.08, mouthY: r * 0.4, eye: '#4b9edb' });
         g.globalAlpha *= 0.6 + 0.4 * Math.abs(Math.sin((o.t || 0) * 0.004));
         g.fillStyle = '#fff6c2';
         star(g, -r * 0.95, -r * 0.7, r * 0.14);
@@ -408,9 +430,16 @@
     }
 
     function drawMomo(g, r, o) {
+        // 유미가 타고 다니는 금빛 마법책.
+        g.fillStyle = '#b28a41';
+        poly(g, [[-r * 1.03, r * 0.55], [0, r * 0.72], [r * 1.03, r * 0.55], [r * 0.94, r * 1.03], [0, r * 1.15], [-r * 0.94, r * 1.03]]);
+        g.fillStyle = '#fff0c3';
+        poly(g, [[-r * 0.91, r * 0.57], [0, r * 0.76], [r * 0.91, r * 0.57], [r * 0.82, r * 0.91], [0, r * 1.02], [-r * 0.82, r * 0.91]]);
+        g.strokeStyle = '#c4a466'; g.lineWidth = r * 0.04;
+        g.beginPath(); g.moveTo(0, r * 0.76); g.lineTo(0, r * 1.02); g.stroke();
         g.save();
         g.rotate(Math.sin((o.t || 0) * 0.005) * 0.25);
-        g.strokeStyle = '#f2a03d';
+        g.strokeStyle = '#789ac6';
         g.lineWidth = r * 0.2;
         g.lineCap = 'round';
         g.beginPath();
@@ -419,22 +448,24 @@
         g.stroke();
         g.restore();
         for (const k of [-1, 1]) {
-            g.fillStyle = '#d9832a';
+            g.fillStyle = '#789ac6';
             poly(g, [[k * r * 0.2, -r * 0.72], [k * r * 0.62, -r * 1.12], [k * r * 0.76, -r * 0.42]]);
-            g.fillStyle = '#ffc2d4';
+            g.fillStyle = '#d2a8df';
             poly(g, [[k * r * 0.34, -r * 0.7], [k * r * 0.58, -r * 0.95], [k * r * 0.66, -r * 0.55]]);
         }
-        outlined(g, 0, 0, r * 0.84, '#ffd9a8', '#d9832a');
-        g.fillStyle = '#f2a03d';
+        outlined(g, 0, 0, r * 0.84, '#f4e5ce', '#789ac6');
+        g.fillStyle = '#789ac6';
         g.beginPath();
         g.arc(0, 0, r * 0.84, Math.PI * 1.1, Math.PI * 1.9);
         g.closePath();
         g.fill();
-        g.fillStyle = '#d9832a';
-        for (const dx of [-0.2, 0, 0.2]) oval(g, dx * r, -r * 0.62, r * 0.05, r * 0.12);
+        g.fillStyle = '#e7bd58';
+        poly(g, [[0, -r * 0.93], [r * 0.16, -r * 0.66], [0, -r * 0.42], [-r * 0.16, -r * 0.66]]);
+        g.fillStyle = '#7fd3ec';
+        circle(g, 0, -r * 0.65, r * 0.07);
         g.fillStyle = '#fff4e6';
         oval(g, 0, r * 0.32, r * 0.45, r * 0.3);
-        face(g, r, o, { eyeY: r * 0.02, mouthY: r * 0.32, eye: '#3fae66' });
+        face(g, r, o, { eyeY: r * 0.02, mouthY: r * 0.32, eye: '#4988cf' });
         g.fillStyle = '#e8566b';
         oval(g, o.look, r * 0.2, r * 0.06, r * 0.045);
         g.strokeStyle = '#c9744a';
@@ -452,29 +483,25 @@
     }
 
     function drawDandan(g, r, o) {
-        outlined(g, 0, 0, r * 0.84, '#a7a9b8', '#6f7182');
-        g.fillStyle = '#9295a6';
-        circle(g, -r * 0.35, r * 0.45, r * 0.2);
-        circle(g, r * 0.5, -r * 0.1, r * 0.14);
-        g.strokeStyle = '#6f7182';
-        g.lineWidth = Math.max(1, r * 0.05);
-        g.beginPath();
-        g.moveTo(-r * 0.6, -r * 0.3);
-        g.lineTo(-r * 0.45, -r * 0.15);
-        g.lineTo(-r * 0.55, 0);
-        g.stroke();
-        // 머리 위 이끼와 꽃
-        g.fillStyle = '#6fbf73';
-        g.beginPath();
-        g.arc(0, 0, r * 0.84, Math.PI * 1.2, Math.PI * 1.8);
-        g.quadraticCurveTo(r * 0.2, -r * 0.5, 0, -r * 0.58);
-        g.quadraticCurveTo(-r * 0.2, -r * 0.5, -r * 0.49, -r * 0.68);
-        g.fill();
-        g.fillStyle = '#fff';
-        for (let i = 0; i < 5; i++) circle(g, r * 0.25 + Math.cos(i * 1.257) * r * 0.08, -r * 0.88 + Math.sin(i * 1.257) * r * 0.08, r * 0.06);
-        g.fillStyle = '#ffd34d';
-        circle(g, r * 0.25, -r * 0.88, r * 0.05);
-        face(g, r, o, { eyeY: r * 0.02, mouthY: r * 0.3, eye: '#46c3d1' });
+        // 말파이트의 뾰족한 바위 어깨와 층진 암석 얼굴.
+        for (const k of [-1, 1]) {
+            g.fillStyle = '#514b3d';
+            poly(g, [[k * r * 0.35, r * 0.6], [k * r * 1.04, r * 0.72], [k * r * 1.15, -r * 0.08], [k * r * 0.77, -r * 0.58], [k * r * 0.62, -r * 0.08]]);
+            g.fillStyle = '#92836a';
+            poly(g, [[k * r * 0.65, r * 0.2], [k * r * 1.04, -r * 0.08], [k * r * 0.77, -r * 0.58], [k * r * 0.62, -r * 0.08]]);
+        }
+        g.fillStyle = '#514b3d';
+        poly(g, [[-r * 0.8, r * 0.32], [-r * 0.72, -r * 0.57], [-r * 0.28, -r * 0.81], [0, -r * 1.15], [r * 0.3, -r * 0.78], [r * 0.72, -r * 0.57], [r * 0.8, r * 0.32], [r * 0.37, r * 0.88], [-r * 0.37, r * 0.88]]);
+        g.fillStyle = '#9c8b6f';
+        poly(g, [[-r * 0.63, -r * 0.47], [0, -r * 0.99], [r * 0.63, -r * 0.47], [r * 0.55, r * 0.25], [0, r * 0.65], [-r * 0.55, r * 0.25]]);
+        g.fillStyle = '#73644f';
+        poly(g, [[0, -r * 0.99], [r * 0.63, -r * 0.47], [r * 0.55, r * 0.25], [0, r * 0.65], [r * 0.12, -r * 0.22]]);
+        g.fillStyle = o.hurt ? '#ffb066' : '#ffdd68';
+        for (const k of [-1, 1]) poly(g, [[k * r * 0.12, -r * 0.08], [k * r * 0.49, -r * 0.24], [k * r * 0.4, -r * 0.01], [k * r * 0.15, r * 0.06]]);
+        g.strokeStyle = '#403c32'; g.lineWidth = r * 0.07; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(-r * 0.3, r * 0.35); g.lineTo(0, r * 0.29); g.lineTo(r * 0.3, r * 0.35); g.stroke();
+        g.strokeStyle = '#c4ae86'; g.lineWidth = r * 0.035;
+        g.beginPath(); g.moveTo(-r * 0.5, -r * 0.47); g.lineTo(-r * 0.3, -r * 0.32); g.lineTo(-r * 0.36, -r * 0.2); g.stroke();
     }
 
     function drawBackground(g) {

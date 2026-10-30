@@ -8,7 +8,7 @@ require dirname(__DIR__) . '/bootstrap.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>협곡 간식 대작전 · 모여</title>
-    <meta name="description" content="말랑한 몽글이와 함께 떨어지는 골드와 쿠키를 모으는 캐주얼 미니게임">
+    <meta name="description" content="롤 챔피언과 함께 떨어지는 골드와 쿠키를 모으는 캐주얼 미니게임">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/game.css">
     <script src="/game.js" defer></script>
@@ -37,7 +37,7 @@ require dirname(__DIR__) . '/bootstrap.php';
         <fieldset class="champ-select" id="champ-select">
             <legend>챔피언 선택</legend>
             <div class="champ-list">
-<?php foreach (['dori' => ['도리', '날쌘 정찰병'], 'coco' => ['코코', '꼬마 마법사'], 'lumi' => ['루미', '별빛 수호자'], 'momo' => ['모모', '장난꾸러기 냥이'], 'dandan' => ['단단', '든든한 돌 골렘']] as $key => [$name, $role]): ?>
+<?php foreach (['dori' => ['티모', '날쌘 정찰병'], 'coco' => ['애니', '꼬마 마법사'], 'lumi' => ['럭스', '별빛 수호자'], 'momo' => ['유미', '장난꾸러기 냥이'], 'dandan' => ['말파이트', '든든한 돌 골렘']] as $key => [$name, $role]): ?>
                 <label class="champ">
                     <input type="radio" name="champ" value="<?= $key ?>">
                     <canvas data-champ="<?= $key ?>" width="72" height="72" aria-hidden="true"></canvas>
@@ -94,7 +94,7 @@ require dirname(__DIR__) . '/bootstrap.php';
             </aside>
         </section>
 
-        <p class="game-note">LoL의 협곡 분위기에서 영감을 받은 비공식 팬 미니게임으로, Riot Games와 관련이 없습니다. 등장 챔피언은 모두 자체 제작한 오리지널 캐릭터입니다.</p>
+        <p class="game-note">LoL의 협곡 분위기에서 영감을 받은 비공식 팬 미니게임으로, Riot Games와 관련이 없습니다. 캐릭터 이름은 LoL 챔피언에서 가져왔으며, 이미지는 자체 제작했습니다.</p>
     </main>
 </body>
 </html>
